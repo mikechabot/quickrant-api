@@ -10,10 +10,10 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.quickrant.rave</groupId>
-  <artifactId>quickrant</artifactId>
-  <packaging>war</packaging>
+  <artifactId>quickrant-api</artifactId>
+  <packaging>jar</packaging>
   <version>0.2</version>
-  <name>quickrant-webapp</name>
+  <name>quickrant-api</name>
   <url>http://maven.apache.org</url> 
   
   <build>
