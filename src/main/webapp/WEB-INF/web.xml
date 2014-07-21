@@ -1,0 +1,116 @@
+<web-app 
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+    version="3.0">
+  
+  <display-name>quickrant</display-name>
+  
+  <!-- Bootstrap class runs during servlet container creation -->
+  <listener>
+    <listener-class>com.quickrant.rave.Bootstrap</listener-class>
+  </listener>
+
+  <!-- Don't waste cycles on certain requests -->
+  <filter>
+    <filter-name>ExclusionFilter</filter-name>
+    <filter-class>com.quickrant.rave.filters.ExclusionFilter</filter-class>
+    <init-param>
+      <param-name>exclusions</param-name>
+      <param-value>\/img\/*,\/css\/*,\/js\/*,\/ico\/*</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>ExclusionFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <!-- Reject gargage requests -->
+  <filter>
+    <filter-name>AegisFilter</filter-name>
+    <filter-class>com.quickrant.rave.filters.AegisFilter</filter-class>
+    <init-param>
+      <param-name>aegis</param-name>
+      <param-value>com.quickrant.rave.security.Aegis</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>AegisFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <!-- Process incoming requests -->
+  <filter>
+    <filter-name>RequestFilter</filter-name>
+    <filter-class>com.quickrant.rave.filters.RequestFilter</filter-class>
+    <init-param>
+      <param-name>visitor-service</param-name>
+      <param-value>com.quickrant.rave.services.VisitorService</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>RequestFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <!-- Send /rant requests to RantController -->
+  <servlet>
+    <servlet-name>RantController</servlet-name>
+    <servlet-class>com.quickrant.rave.controller.RantController</servlet-class>
+    <init-param>
+      <param-name>visitor-service</param-name>
+      <param-value>com.quickrant.rave.services.VisitorService</param-value>
+    </init-param>
+    <init-param>
+      <param-name>rant-service</param-name>
+      <param-value>com.quickrant.rave.services.RantService</param-value>
+    </init-param>
+    <init-param>
+      <param-name>emotion-service</param-name>
+      <param-value>com.quickrant.rave.services.EmotionService</param-value>
+    </init-param>
+    <init-param>
+      <param-name>question-service</param-name>
+      <param-value>com.quickrant.rave.services.QuestionService</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RantController</servlet-name>
+    <url-pattern>/rant/*</url-pattern>
+  </servlet-mapping>
+  
+  <!-- Send /ajax requests to AjaxController -->
+  <servlet>
+    <servlet-name>AjaxController</servlet-name>
+    <servlet-class>com.quickrant.rave.controller.AjaxController</servlet-class>
+    <init-param>
+      <param-name>visitor-service</param-name>
+      <param-value>com.quickrant.rave.services.VisitorService</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AjaxController</servlet-name>
+    <url-pattern>/ajax/*</url-pattern>
+  </servlet-mapping>
+  
+  <!-- Error pages -->
+  <error-page>
+    <error-code>404</error-code>
+    <location>/404.jsp</location>
+  </error-page>
+  <error-page>    
+    <error-code>403</error-code>
+    <location>/403.jsp</location>
+  </error-page>
+  <error-page>    
+    <error-code>500</error-code>
+    <location>/500.jsp</location>
+  </error-page>
+  
+  <!-- Welcome list -->
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
+</web-app>
