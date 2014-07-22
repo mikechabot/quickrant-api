@@ -38,4 +38,10 @@ public class QuestionService extends ModelService {
 		return false;
 	}
 
+	@Override
+	protected List<Model> findAll(String subQuery, Object value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -74,4 +74,10 @@ public class RantService extends ModelService {
 		}
 	}
 
+	@Override
+	protected List<Model> findAll(String subQuery, Object value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

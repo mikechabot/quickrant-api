@@ -18,6 +18,11 @@ public class VisitorService extends ModelService {
 	}
 	
 	@Override
+	protected List<Model> findAll(String subQuery, Object value) {
+		return Visitor.find(subQuery, value);
+	}
+	
+	@Override
 	protected Visitor findById(int id) {
 		return Visitor.findById(id);
 	}

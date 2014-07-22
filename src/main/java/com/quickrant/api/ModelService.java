@@ -16,6 +16,7 @@ public abstract class ModelService {
 	private static Logger log = Logger.getLogger(ModelService.class);
 
 	protected abstract List<Model> findAll();
+	protected abstract List<Model> findAll(String subQuery, Object value);
 	protected abstract Model findById(int id);
 	protected abstract Model findFirst(String subQuery, Object value);
 	protected abstract Model parse(Map<String, String> map);	
@@ -33,6 +34,31 @@ public abstract class ModelService {
 			database = new Database();
 			database.open();
 			List<Model> temp = findAll();
+			/* Iterate to fetch */
+			for (Model each : temp) {
+				list.add(each);
+			}
+		} catch (SQLException e) {
+			log.error("Unable to open connection to database", e);
+		} finally {
+			DatabaseUtil.close(database);
+		}
+		return list;
+	}
+	
+	/**
+	 * Fetch all records with query
+	 * @param subQuery ("id = ?")
+	 * @param value ("2")
+	 * @return
+	 */
+	public List<Model> fetch(String subQuery, Object value) {
+		List<Model> list = new ArrayList<Model>();
+		Database database = null;
+		try {
+			database = new Database();
+			database.open();
+			List<Model> temp = findAll(subQuery, value);
 			/* Iterate to fetch */
 			for (Model each : temp) {
 				list.add(each);

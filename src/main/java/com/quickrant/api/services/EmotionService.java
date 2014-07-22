@@ -37,5 +37,11 @@ public class EmotionService extends ModelService {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	@Override
+	protected List<Model> findAll(String subQuery, Object value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
