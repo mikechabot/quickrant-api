@@ -6,12 +6,13 @@ import java.util.Map;
 import org.javalite.activejdbc.Model;
 
 import com.quickrant.api.ModelService;
-import com.quickrant.api.database.CustomSql;
 import com.quickrant.api.models.Emotion;
 import com.quickrant.api.models.Question;
 import com.quickrant.api.models.Rant;
 
 public class RantService extends ModelService {
+	
+	public static final String FETCH_TOP_40_RANTS = "select id, created_at, emotion_id, question_id, rant, visitor_name, location from rants order by id desc limit 40";
 	
 	private static QuestionService questionSvc = new QuestionService();
 	private static EmotionService emotionSvc = new EmotionService();
@@ -23,7 +24,7 @@ public class RantService extends ModelService {
 	
 	@Override
 	public List<Model> findAll() {
-		return Rant.findBySQL(CustomSql.FETCH_TOP_40_RANTS);
+		return Rant.findBySQL(FETCH_TOP_40_RANTS);
 	}
 	
 	@Override

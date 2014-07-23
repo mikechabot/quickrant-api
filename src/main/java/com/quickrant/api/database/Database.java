@@ -4,8 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.sql.DataSource;
 
@@ -23,8 +21,6 @@ public class Database {
 
 	private static BoneCPDataSource dataSource;
 	
-	private Timer timer;
-
 	static {
 		try {
 			/* Load the driver */
@@ -64,13 +60,7 @@ public class Database {
 	public Database() { }
 	
 	public void initialize() throws SQLException {
-		verifyDatabaseConnectivity();
-		startStatisticsJob();
-	}
-	
-	public void startStatisticsJob() {
-		timer = new Timer();
-        timer.schedule(new RunStatistics(), 10000, 10000);
+		verifyDatabaseConnectivity();		
 	}
 
 	public void open() throws SQLException {
@@ -111,14 +101,6 @@ public class Database {
 			DatabaseUtil.close(resultSet);
 			DatabaseUtil.close(preparedStatement);
 			DatabaseUtil.close(database);
-		}
-	}
-
-	private class RunStatistics extends TimerTask {
-		@Override
-		public void run() {
-			DatabaseStats stats = new DatabaseStats(getPool());
-			stats.printStats();
 		}
 	}
 
