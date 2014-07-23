@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 import org.javalite.activejdbc.Model;
 
-import com.quickrant.rave.utils.TimeUtils;
+import com.quickrant.api.utils.TimeUtils;
 
 public class Rant extends Model {
 	

@@ -1,4 +1,4 @@
-package com.quickrant.rave.utils;
+package com.quickrant.api.utils;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
