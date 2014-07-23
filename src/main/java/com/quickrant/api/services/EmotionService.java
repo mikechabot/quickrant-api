@@ -11,8 +11,23 @@ import com.quickrant.api.models.Emotion;
 public class EmotionService extends ModelService {
 
 	@Override
+	protected Long getCount() {
+		return Emotion.count();
+	}
+
+	@Override
 	protected List<Model> findAll() {
 		return Emotion.findAll();
+	}
+	
+	@Override
+	protected List<Model> findAll(String subQuery, Object params) {
+		return Emotion.find(subQuery, params);
+	}
+	
+	@Override
+	protected List<Model> findBySql(String sql) {
+		return Emotion.findBySQL(sql);
 	}
 
 	@Override
@@ -36,12 +51,6 @@ public class EmotionService extends ModelService {
 	protected boolean save(Map<String, String> map) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-	
-	@Override
-	protected List<Model> findAll(String subQuery, Object value) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

@@ -15,14 +15,35 @@ public abstract class ModelService {
 		
 	private static Logger log = Logger.getLogger(ModelService.class);
 
+	protected abstract Long getCount();
 	protected abstract List<Model> findAll();
-	protected abstract List<Model> findAll(String subQuery, Object value);
+	protected abstract List<Model> findAll(String subQuery, Object params);
+	protected abstract List<Model> findBySql(String sql); 
 	protected abstract Model findById(int id);
-	protected abstract Model findFirst(String subQuery, Object value);
+	protected abstract Model findFirst(String subQuery, Object params);
 	protected abstract Model parse(Map<String, String> map);	
 	protected abstract boolean save(Map<String, String> map);
-	
 
+	/**
+	 * Get table row count
+	 * @param id
+	 * @return
+	 */
+	public Long count(int id) {
+		Long count = (long) 0;
+		Database database = null;
+		try {
+			database = new Database();
+			database.open();
+			count = getCount();
+		} catch (SQLException e) {
+			log.error("Unable to open connection to database", e);
+		} finally {
+			DatabaseUtil.close(database);
+		}
+		return count;
+	}
+	
 	/**
 	 * Fetch all records
 	 * @return
@@ -49,16 +70,40 @@ public abstract class ModelService {
 	/**
 	 * Fetch all records with query
 	 * @param subQuery ("id = ?")
-	 * @param value ("2")
+	 * @param params ("2")
 	 * @return
 	 */
-	public List<Model> fetch(String subQuery, Object value) {
+	public List<Model> fetch(String subQuery, Object params) {
 		List<Model> list = new ArrayList<Model>();
 		Database database = null;
 		try {
 			database = new Database();
 			database.open();
-			List<Model> temp = findAll(subQuery, value);
+			List<Model> temp = findAll(subQuery, params);
+			/* Iterate to fetch */
+			for (Model each : temp) {
+				list.add(each);
+			}
+		} catch (SQLException e) {
+			log.error("Unable to open connection to database", e);
+		} finally {
+			DatabaseUtil.close(database);
+		}
+		return list;
+	}
+	
+	/**
+	 * Fetch records by sql
+	 * @param id
+	 * @return
+	 */
+	public List<Model> fetchBySql(String sql) {
+		List<Model> list = new ArrayList<Model>();
+		Database database = null;
+		try {
+			database = new Database();
+			database.open();
+			List<Model> temp = findBySql(sql);
 			/* Iterate to fetch */
 			for (Model each : temp) {
 				list.add(each);
@@ -94,16 +139,16 @@ public abstract class ModelService {
 	/**
 	 * Fetch first record
 	 * @param subQuery ("id = ?")
-	 * @param value ("2")
+	 * @param params ("2")
 	 * @return Model
 	 */
-	public Model fetchFirst(String subQuery, Object value) {
+	public Model fetchFirst(String subQuery, Object params) {
 		Model model = null;
 		Database database = null;
 		try {
 			database = new Database();
 			database.open();
-			model = findFirst(subQuery, value);
+			model = findFirst(subQuery, params);
 		} catch (SQLException e) {
 			log.error("Unable to open connection to database", e);
 		} finally {

@@ -17,17 +17,32 @@ public class RantService extends ModelService {
 	private static EmotionService emotionSvc = new EmotionService();
 	
 	@Override
+	protected Long getCount() {
+		return Rant.count();
+	}
+	
+	@Override
 	public List<Model> findAll() {
 		return Rant.findBySQL(CustomSql.FETCH_TOP_40_RANTS);
 	}
 	
 	@Override
-	public Model findById(int id) {
+	protected List<Model> findAll(String subQuery, Object params) {
+		return Rant.find(subQuery, params);
+	}
+	
+	@Override
+	protected List<Model> findBySql(String sql) {
+		return Rant.findBySQL(sql);
+	}
+	
+	@Override
+	public Rant findById(int id) {
 		return Rant.findById(id);
 	}
 	
 	@Override
-	protected Model findFirst(String subQuery, Object value) {
+	protected Rant findFirst(String subQuery, Object value) {
 		return Rant.findFirst(subQuery, value);
 	}
 	
@@ -72,12 +87,6 @@ public class RantService extends ModelService {
 		if (rant.getLocation() == null || rant.getLocation().isEmpty()) {
 			rant.setLocation("Earth");
 		}
-	}
-
-	@Override
-	protected List<Model> findAll(String subQuery, Object value) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

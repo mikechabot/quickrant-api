@@ -11,9 +11,24 @@ import com.quickrant.api.models.Question;
 public class QuestionService extends ModelService {
 
 	@Override
+	protected Long getCount() {
+		return Question.count();
+	}
+
+	@Override
 	public List<Model> findAll() {
 		return Question.findAll();
 	}
+	
+	@Override
+	protected List<Model> findAll(String subQuery, Object params) {
+		return Question.find(subQuery, params);
+	}
+	
+	@Override
+	protected List<Model> findBySql(String sql) {
+		return Question.findBySQL(sql);
+	}	
 
 	@Override
 	public Question findById(int id) {
@@ -36,12 +51,6 @@ public class QuestionService extends ModelService {
 	protected boolean save(Map<String, String> map) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	protected List<Model> findAll(String subQuery, Object value) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

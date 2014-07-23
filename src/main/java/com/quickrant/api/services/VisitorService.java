@@ -13,6 +13,11 @@ import com.quickrant.api.models.Visitor;
 public class VisitorService extends ModelService {
 
 	@Override
+	protected Long getCount() {
+		return Visitor.count();
+	}
+	
+	@Override
 	protected List<Model> findAll() {
 		return Visitor.findAll();
 	}
@@ -20,6 +25,11 @@ public class VisitorService extends ModelService {
 	@Override
 	protected List<Model> findAll(String subQuery, Object value) {
 		return Visitor.find(subQuery, value);
+	}
+	
+	@Override
+	protected List<Model> findBySql(String sql) {
+		return Visitor.findBySQL(sql);
 	}
 	
 	@Override
@@ -99,5 +109,5 @@ public class VisitorService extends ModelService {
 		sb.append(temp.getScreenColor());
 		return sb.toString();
 	}
-
+	
 }
