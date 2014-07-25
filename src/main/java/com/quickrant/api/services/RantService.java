@@ -3,19 +3,24 @@ package com.quickrant.api.services;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.javalite.activejdbc.Model;
 
 import com.quickrant.api.ModelService;
 import com.quickrant.api.models.Emotion;
 import com.quickrant.api.models.Question;
 import com.quickrant.api.models.Rant;
+import com.quickrant.api.models.Visitor;
+import com.quickrant.api.utils.TimeUtils;
 
 public class RantService extends ModelService {
 	
 	public static final String FETCH_TOP_40_RANTS = "select id, created_at, emotion_id, question_id, rant, visitor_name, location from rants order by id desc limit 40";
+	public static Logger log = Logger.getLogger(RantService.class);
 	
-	private static QuestionService questionSvc = new QuestionService();
 	private static EmotionService emotionSvc = new EmotionService();
+	private static VisitorService visitorSvc = new VisitorService();
+	private static QuestionService questionSvc = new QuestionService();
 	
 	@Override
 	protected Long getCount() {
@@ -23,7 +28,7 @@ public class RantService extends ModelService {
 	}
 	
 	@Override
-	public List<Model> findAll() {
+	protected List<Model> findAll() {
 		return Rant.findBySQL(FETCH_TOP_40_RANTS);
 	}
 	
@@ -38,7 +43,7 @@ public class RantService extends ModelService {
 	}
 	
 	@Override
-	public Rant findById(int id) {
+	protected Rant findById(int id) {
 		return Rant.findById(id);
 	}
 	
@@ -48,32 +53,39 @@ public class RantService extends ModelService {
 	}
 	
 	@Override
-	protected Rant parse(Map<String, String> map) {		
+	public Rant parse(Map<String, String> map) {		
 		Rant rant = new Rant();
-		rant.fromMap(map);
+		parse(rant, map);
 		setDefaults(rant);
 		return rant;
 	}
 	
 	@Override
-	public boolean save(Map<String, String> map) {
-		Rant rant = parse(map);
-		
+	public boolean save(Map<String, String> map) {		
 		/* Parse emotion and question from input */
+		Rant rant = parse(map);
 		Emotion emotion = emotionSvc.parse(map);
+		Visitor visitor = visitorSvc.parse(map);
 		Question question = questionSvc.parse(map);
 
 		/* Fetch question and emotion */
+		visitor = (Visitor) visitorSvc.fetchFirst("cookie = ?", visitor.getCookie());
 		emotion = (Emotion) emotionSvc.fetchFirst("emotion = ?", emotion.getEmotion());
 		question = (Question) questionSvc.fetchFirst("question = ?", question.getQuestion());
-
+		
+		/* Set last rant time */
+		visitor.setLastRant(TimeUtils.getNowTimestamp());
+		
 		/* Set foreign keys */
+		rant.setVisitorId((int) visitor.getId());
 		rant.setEmotionId((int) emotion.getId());
 		rant.setQuestionId((int) question.getId());
-		
+
 		/* Check if rant is valid, then save */
 		if (!rant.isValid()) return false;
-		save(rant);		
+		if (!visitor.isValid()) return false;
+		save(rant); 
+		save(visitor);
 		return true;
 	}
 		

@@ -41,14 +41,14 @@ public class EmotionService extends ModelService {
 	}
 
 	@Override
-	protected Emotion parse(Map<String, String> map) {
+	public Emotion parse(Map<String, String> map) {
 		Emotion emotion = new Emotion();
-		emotion.fromMap(map);
+		parse(emotion, map);
 		return emotion;
 	}
 
 	@Override
-	protected boolean save(Map<String, String> map) {
+	public boolean save(Map<String, String> map) {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -43,14 +43,14 @@ public class VisitorService extends ModelService {
 	}
 	
 	@Override
-	protected Visitor parse(Map<String, String> map) {
+	public Visitor parse(Map<String, String> map) {
 		Visitor visitor = new Visitor();
 		parse(visitor, map);
 		return visitor;
 	}
 	
 	@Override
-	protected boolean save(Map<String, String> map) {
+	public boolean save(Map<String, String> map) {
 		Visitor visitor = parse(map);
 		visitor.setComplete(false);
 		save(visitor);
@@ -108,6 +108,11 @@ public class VisitorService extends ModelService {
 		sb.append(temp.getScreenWidth() + ":");
 		sb.append(temp.getScreenColor());
 		return sb.toString();
+	}
+
+	public Visitor getExistingVisitorFromCookie(String cookieValue) {
+		if (cookieValue == null || cookieValue.isEmpty()) return null;
+		return (Visitor) fetchFirst("cookie = ?", cookieValue);
 	}
 	
 }

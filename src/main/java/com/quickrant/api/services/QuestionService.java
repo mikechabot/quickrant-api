@@ -16,7 +16,7 @@ public class QuestionService extends ModelService {
 	}
 
 	@Override
-	public List<Model> findAll() {
+	protected List<Model> findAll() {
 		return Question.findAll();
 	}
 	
@@ -31,7 +31,7 @@ public class QuestionService extends ModelService {
 	}	
 
 	@Override
-	public Question findById(int id) {
+	protected Question findById(int id) {
 		return Question.findById(id);
 	}
 
@@ -41,14 +41,14 @@ public class QuestionService extends ModelService {
 	}
 
 	@Override
-	protected Question parse(Map<String, String> map) {
+	public Question parse(Map<String, String> map) {
 		Question question = new Question();
-		question.fromMap(map);
+		parse(question, map);
 		return question;
 	}
 
 	@Override
-	protected boolean save(Map<String, String> map) {
+	public boolean save(Map<String, String> map) {
 		// TODO Auto-generated method stub
 		return false;
 	}

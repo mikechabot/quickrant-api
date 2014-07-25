@@ -21,8 +21,8 @@ public abstract class ModelService {
 	protected abstract List<Model> findBySql(String sql); 
 	protected abstract Model findById(int id);
 	protected abstract Model findFirst(String subQuery, Object params);
-	protected abstract Model parse(Map<String, String> map);	
-	protected abstract boolean save(Map<String, String> map);
+	public abstract Model parse(Map<String, String> map);	
+	public abstract boolean save(Map<String, String> map);
 
 	/**
 	 * Get table row count
@@ -181,7 +181,7 @@ public abstract class ModelService {
 	 * @param map
 	 * @return
 	 */
-	public Model parse(Model model, Map<String, String> map) {
+	protected Model parse(Model model, Map<String, String> map) {
 		Database database = null;
 		try {
 			database = new Database();
