@@ -5,38 +5,38 @@ import java.util.Map;
 
 import org.javalite.activejdbc.Model;
 
-import com.quickrant.api.ModelService;
+import com.quickrant.api.AbstractService;
 import com.quickrant.api.models.Emotion;
 
-public class EmotionService extends ModelService {
+public class EmotionService extends AbstractService {
 
 	@Override
-	protected Long getCount() {
+	public Long count() {
 		return Emotion.count();
 	}
 
 	@Override
-	protected List<Model> findAll() {
+	public List<Model> findAll() {
 		return Emotion.findAll();
 	}
 	
 	@Override
-	protected List<Model> findAll(String subQuery, Object params) {
+	public List<Model> find(String subQuery, Object params) {
 		return Emotion.find(subQuery, params);
 	}
 	
 	@Override
-	protected List<Model> findBySql(String sql) {
+	public List<Model> findBySql(String sql) {
 		return Emotion.findBySQL(sql);
 	}
 
 	@Override
-	protected Emotion findById(int id) {
+	public Emotion findById(int id) {
 		return Emotion.findById(id);
 	}
 	
 	@Override
-	protected Emotion findFirst(String subQuery, Object value) {
+	public Emotion findFirst(String subQuery, Object value) {
 		return Emotion.findFirst(subQuery, value);		
 	}
 

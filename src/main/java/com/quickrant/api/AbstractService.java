@@ -11,18 +11,9 @@ import org.javalite.activejdbc.Model;
 import com.quickrant.api.database.Database;
 import com.quickrant.api.database.DatabaseUtil;
 
-public abstract class ModelService {
+public abstract class AbstractService implements Serviceable {
 		
-	private static Logger log = Logger.getLogger(ModelService.class);
-
-	protected abstract Long getCount();
-	protected abstract List<Model> findAll();
-	protected abstract List<Model> findAll(String subQuery, Object params);
-	protected abstract List<Model> findBySql(String sql); 
-	protected abstract Model findById(int id);
-	protected abstract Model findFirst(String subQuery, Object params);
-	public abstract Model parse(Map<String, String> map);	
-	public abstract boolean save(Map<String, String> map);
+	private static Logger log = Logger.getLogger(AbstractService.class);
 
 	/**
 	 * Get table row count
@@ -35,7 +26,7 @@ public abstract class ModelService {
 		try {
 			database = new Database();
 			database.open();
-			count = getCount();
+			count = count();
 		} catch (SQLException e) {
 			log.error("Unable to open connection to database", e);
 		} finally {
@@ -79,7 +70,7 @@ public abstract class ModelService {
 		try {
 			database = new Database();
 			database.open();
-			List<Model> temp = findAll(subQuery, params);
+			List<Model> temp = find(subQuery, params);
 			/* Iterate to fetch */
 			for (Model each : temp) {
 				list.add(each);

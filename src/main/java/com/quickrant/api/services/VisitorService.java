@@ -6,39 +6,39 @@ import java.util.Map;
 
 import org.javalite.activejdbc.Model;
 
-import com.quickrant.api.ModelService;
+import com.quickrant.api.AbstractService;
 import com.quickrant.api.Params;
 import com.quickrant.api.models.Visitor;
 
-public class VisitorService extends ModelService {
+public class VisitorService extends AbstractService {
 
 	@Override
-	protected Long getCount() {
+	public Long count() {
 		return Visitor.count();
 	}
 	
 	@Override
-	protected List<Model> findAll() {
+	public List<Model> findAll() {
 		return Visitor.findAll();
 	}
 	
 	@Override
-	protected List<Model> findAll(String subQuery, Object value) {
+	public List<Model> find(String subQuery, Object value) {
 		return Visitor.find(subQuery, value);
 	}
 	
 	@Override
-	protected List<Model> findBySql(String sql) {
+	public List<Model> findBySql(String sql) {
 		return Visitor.findBySQL(sql);
 	}
 	
 	@Override
-	protected Visitor findById(int id) {
+	public Visitor findById(int id) {
 		return Visitor.findById(id);
 	}
 
 	@Override
-	protected Visitor findFirst(String subQuery, Object value) {
+	public Visitor findFirst(String subQuery, Object value) {
 		return Visitor.findFirst(subQuery, value);
 	}
 	

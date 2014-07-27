@@ -38,7 +38,7 @@ public class Rant extends Model {
 		set("emotion_id", emotionId);
 	}
 	
-	public int getEmotionId() {
+	public Integer getEmotionId() {
 		return getInteger("emotion_id");
 	}
 
@@ -46,7 +46,7 @@ public class Rant extends Model {
 		set("question_id", questionId);
 	}
 	
-	public int getQuestionId() {
+	public Integer getQuestionId() {
 		return getInteger("question_id");
 	}
 	

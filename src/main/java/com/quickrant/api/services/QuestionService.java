@@ -5,38 +5,38 @@ import java.util.Map;
 
 import org.javalite.activejdbc.Model;
 
-import com.quickrant.api.ModelService;
+import com.quickrant.api.AbstractService;
 import com.quickrant.api.models.Question;
 
-public class QuestionService extends ModelService {
+public class QuestionService extends AbstractService {
 
 	@Override
-	protected Long getCount() {
+	public Long count() {
 		return Question.count();
 	}
 
 	@Override
-	protected List<Model> findAll() {
+	public List<Model> findAll() {
 		return Question.findAll();
 	}
 	
 	@Override
-	protected List<Model> findAll(String subQuery, Object params) {
+	public List<Model> find(String subQuery, Object params) {
 		return Question.find(subQuery, params);
 	}
 	
 	@Override
-	protected List<Model> findBySql(String sql) {
+	public List<Model> findBySql(String sql) {
 		return Question.findBySQL(sql);
 	}	
 
 	@Override
-	protected Question findById(int id) {
+	public Question findById(int id) {
 		return Question.findById(id);
 	}
 
 	@Override
-	protected Question findFirst(String subQuery, Object value) {
+	public Question findFirst(String subQuery, Object value) {
 		return Question.findFirst(subQuery, value);
 	}
 

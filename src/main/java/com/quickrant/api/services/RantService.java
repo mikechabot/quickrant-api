@@ -6,14 +6,14 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.javalite.activejdbc.Model;
 
-import com.quickrant.api.ModelService;
+import com.quickrant.api.AbstractService;
 import com.quickrant.api.models.Emotion;
 import com.quickrant.api.models.Question;
 import com.quickrant.api.models.Rant;
 import com.quickrant.api.models.Visitor;
 import com.quickrant.api.utils.TimeUtils;
 
-public class RantService extends ModelService {
+public class RantService extends AbstractService {
 	
 	public static final String FETCH_TOP_40_RANTS = "select id, created_at, emotion_id, question_id, rant, visitor_name, location from rants order by id desc limit 40";
 	public static Logger log = Logger.getLogger(RantService.class);
@@ -23,32 +23,32 @@ public class RantService extends ModelService {
 	private static QuestionService questionSvc = new QuestionService();
 	
 	@Override
-	protected Long getCount() {
+	public Long count() {
 		return Rant.count();
 	}
 	
 	@Override
-	protected List<Model> findAll() {
+	public List<Model> findAll() {
 		return Rant.findBySQL(FETCH_TOP_40_RANTS);
 	}
 	
 	@Override
-	protected List<Model> findAll(String subQuery, Object params) {
+	public List<Model> find(String subQuery, Object params) {
 		return Rant.find(subQuery, params);
 	}
 	
 	@Override
-	protected List<Model> findBySql(String sql) {
+	public List<Model> findBySql(String sql) {
 		return Rant.findBySQL(sql);
 	}
 	
 	@Override
-	protected Rant findById(int id) {
+	public Rant findById(int id) {
 		return Rant.findById(id);
 	}
 	
 	@Override
-	protected Rant findFirst(String subQuery, Object value) {
+	public Rant findFirst(String subQuery, Object value) {
 		return Rant.findFirst(subQuery, value);
 	}
 	
