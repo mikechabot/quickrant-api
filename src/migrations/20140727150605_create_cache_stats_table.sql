@@ -1,0 +1,1 @@
+create table cache_stats (id serial not null, created_at timestamp(6), updated_at timestamp (6), cache_name varchar(50), entries integer, expiry bigint, next_run_time timestamp (6), constraint cache_stats_pkey primary key (id));

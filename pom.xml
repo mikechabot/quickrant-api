@@ -5,7 +5,7 @@
   <groupId>com.quickrant.api</groupId>
   <artifactId>quickrant-api</artifactId>
   <packaging>jar</packaging>
-  <version>0.4</version>
+  <version>0.5</version>
   <name>quickrant-api</name>
   <url>http://maven.apache.org</url>
 
