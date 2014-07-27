@@ -3,6 +3,7 @@ package com.quickrant.api.services;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.javalite.activejdbc.Model;
 
@@ -56,6 +57,9 @@ public class RantService extends AbstractService {
 	public Rant parse(Map<String, String> map) {		
 		Rant rant = new Rant();
 		parse(rant, map);
+		/* Escape HTML characters */
+		scrub(rant);
+		/* Set placeholder info */
 		setDefaults(rant);
 		return rant;
 	}
@@ -72,7 +76,7 @@ public class RantService extends AbstractService {
 		visitor = (Visitor) visitorSvc.fetchFirst("cookie = ?", visitor.getCookie());
 		emotion = (Emotion) emotionSvc.fetchFirst("emotion = ?", emotion.getEmotion());
 		question = (Question) questionSvc.fetchFirst("question = ?", question.getQuestion());
-		
+
 		/* Set last rant time */
 		visitor.setLastRant(TimeUtils.getNowTimestamp());
 		
@@ -88,7 +92,13 @@ public class RantService extends AbstractService {
 		save(visitor);
 		return true;
 	}
-		
+
+	private void scrub(Rant rant) {
+		rant.setRant(StringEscapeUtils.escapeHtml(rant.getRant()));
+		rant.setVisitorName(StringEscapeUtils.escapeHtml(rant.getVisitorName()));
+		rant.setLocation(StringEscapeUtils.escapeHtml(rant.getLocation()));
+	}
+
 	/**
 	 * Set default data on some fields
 	 * @param rant

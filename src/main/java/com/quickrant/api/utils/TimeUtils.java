@@ -13,7 +13,7 @@ public class TimeUtils {
 		return new Timestamp(System.currentTimeMillis()); 
 	}
 	
-	public static Timestamp getFutureTimestamp(int offsetInMin) {
+	public static Timestamp getFutureTimestamp(long offsetInMin) {
 		return new Timestamp(System.currentTimeMillis() + offsetInMin*60*1000);
 	}
 	

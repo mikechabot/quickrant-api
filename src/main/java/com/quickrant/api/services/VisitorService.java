@@ -110,9 +110,9 @@ public class VisitorService extends AbstractService {
 		return sb.toString();
 	}
 
-	public Visitor getExistingVisitorFromCookie(String cookieValue) {
-		if (cookieValue == null || cookieValue.isEmpty()) return null;
-		return (Visitor) fetchFirst("cookie = ?", cookieValue);
+	public Visitor getExistingVisitorFromCookie(String cookie) {
+		if (cookie == null || cookie.isEmpty()) return null;
+		return (Visitor) fetchFirst("cookie = ?", cookie);
 	}
 	
 }
