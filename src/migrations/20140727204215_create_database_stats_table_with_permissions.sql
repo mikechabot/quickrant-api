@@ -1,0 +1,3 @@
+create table database_stats (id serial not null, created_at timestamp(6), updated_at timestamp (6), cache_hits bigint, cache_misses bigint, cache_hit_ratio decimal, free_connections integer, leased_connections integer, total_created_connections integer, avg_connection_wait decimal, avg_execution decimal, avg_prepare decimal, constraint database_stats_pkey primary key (id));
+grant select, update, insert on table database_stats to group admins;
+grant usage, select on all sequences in schema public to admins;
