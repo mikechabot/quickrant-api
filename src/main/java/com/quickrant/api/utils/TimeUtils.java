@@ -17,8 +17,16 @@ public class TimeUtils {
 		return new Timestamp(System.currentTimeMillis() + offsetInMin*60*1000);
 	}
 	
+	public static Timestamp getPastTimestamp(long offsetInMin) {
+		return new Timestamp(System.currentTimeMillis() - offsetInMin*60*1000);
+	}
+	
 	public static String getFormattedDate(Timestamp timestamp) {
 		return new SimpleDateFormat("MM/dd/yyyy h:mm a").format(timestamp);
+	}
+	
+	public static String getFormattedDateWithSec(Timestamp timestamp) {
+		return new SimpleDateFormat("MM/dd/yyyy h:mm:ss a").format(timestamp);
 	}
 
 }

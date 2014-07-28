@@ -37,7 +37,7 @@ public class CacheStats extends Model {
 	}
 	
 	public String getNextRunTime() {
-		return TimeUtils.getFormattedDate(getTimestamp("next_run_time"));
+		return TimeUtils.getFormattedDateWithSec(getTimestamp("next_run_time"));
 	}
 	
 	public void setCreated(Timestamp created) {

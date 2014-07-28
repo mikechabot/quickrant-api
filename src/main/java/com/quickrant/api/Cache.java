@@ -45,7 +45,7 @@ public abstract class Cache {
 		
 		/* Get configuration properties */
 		expiry = conf.getRequiredLong(name + "-expiry");
-		log.info(name + " expiry: " + expiry + " minute(s)");
+		log.info("Cache '" + name + "' initialized -> expiry: " + expiry + " minute(s)");
         
 		initialized = true;
 	}
@@ -131,7 +131,7 @@ public abstract class Cache {
     	@Override
     	public void run() {
     		log.info("Cleaned up " + cleanCache() + " cached cookies (" + entries.size() + " active)");
-    		log.info("Next cleaning: " + getNextRunTime());
+    		log.info("Cookies creat: " + getNextRunTime());
     		persistCacheInfo();
         }
     	
@@ -152,7 +152,7 @@ public abstract class Cache {
 		 * @return
 		 */
     	protected Timestamp getNextRunTime() {
-			return TimeUtils.getFutureTimestamp(expiry);
+			return TimeUtils.getFutureTimestamp(2);
 		}
 
     	/**
