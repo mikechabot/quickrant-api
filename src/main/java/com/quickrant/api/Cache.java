@@ -131,7 +131,7 @@ public abstract class Cache {
     	@Override
     	public void run() {
     		log.info("Cleaned up " + cleanCache() + " cached cookies (" + entries.size() + " active)");
-    		log.info("Cookies creat: " + getNextRunTime());
+    		log.info("Next run time: " + getNextRunTime());
     		persistCacheInfo();
         }
     	
