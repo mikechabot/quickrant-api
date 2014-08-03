@@ -18,7 +18,6 @@ import com.jolbox.bonecp.BoneCPDataSource;
 import com.jolbox.bonecp.Statistics;
 import com.quickrant.api.Configuration;
 import com.quickrant.api.models.DatabaseStats;
-import com.quickrant.api.services.DatabaseStatsService;
 
 public class Database {
 
@@ -71,24 +70,23 @@ public class Database {
 	}
 
 	public Database() { }
-
-	public void initialize() throws SQLException {
-		startStatisticsJob();
-		log.info("Database version: " + getVersion());
-	}
 	
-	private void startStatisticsJob() {
+	public void startStatisticsJob() {
 		if (doRunStats) {
 			log.info("Starting statistics job...");
 			timer = new Timer();
-	        timer.schedule(new RunStatistics(), 10000, 20000);	
+	        timer.schedule(new RunStatistics(), 10000, 30000);	
 		}
 	}
 
-	public void open() throws SQLException {
+	public static void open() throws SQLException {
 		Base.open(dataSource);
 	}
 
+	public static void close() {
+		Base.close();
+	}
+	
 	public DataSource getDataSource() {
 		return dataSource;
 	}
@@ -105,36 +103,40 @@ public class Database {
 		return Base.connection().prepareStatement(sql);
 	}
 
-	public void close() {
-		Base.close();
-	}
-
-	private String getVersion() throws SQLException {
-		Database database = null;
+	public String getVersion() throws SQLException {
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
-			database = new Database();
-			database.open();
-			preparedStatement = database.getPreparedStatement("select version()");
+			open();
+			preparedStatement = getPreparedStatement("select version()");
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) version = resultSet.getString(1); 
 		} finally {
 			DatabaseUtil.close(resultSet);
 			DatabaseUtil.close(preparedStatement);
-			DatabaseUtil.close(database);
+			close();
 		}
 		return version;
 	}
 	
-	private class RunStatistics extends TimerTask {
+	public class RunStatistics extends TimerTask {
 		
-		private DatabaseStatsService statsSvc = new DatabaseStatsService();
 		private Statistics stats;
 		private DatabaseStats model;
 		
 		@Override
 		public void run() {
+			try {
+				open();
+				saveStats();
+			} catch (SQLException e) {
+				log.error("Unable to save database stats", e);
+			} finally {
+				close();
+			}
+		}
+
+		public void saveStats() {
 			stats = new Statistics(getPool());
 			model = new DatabaseStats();
 			model.setBonePartitions(partitions);
@@ -149,8 +151,8 @@ public class Database {
 			model.setFreeConnections(stats.getTotalFree());
 			model.setLeasedConnections(stats.getTotalLeased());
 			model.setTotalCreatedConnections(stats.getTotalCreatedConnections());
-			statsSvc.save(model);
+			model.saveIt();
+			log.info("Saving stats - " + model.toString());
 		}
 	}
-
 }

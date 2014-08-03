@@ -11,16 +11,6 @@ public class DatabaseUtil {
 	private static Logger log = Logger.getLogger(DatabaseUtil.class);
 	
 	/**
-	 * Close Database
-	 * @param database
-	 */
-	public static void close(Database database) {
-		if (database != null) {
-			database.close();
-		}
-	}
-	
-	/**
 	 * Close ResultSet
 	 * @param resultSet
 	 */

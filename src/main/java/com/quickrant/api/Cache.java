@@ -1,5 +1,6 @@
 package com.quickrant.api;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Map.Entry;
 import java.util.Timer;
@@ -9,8 +10,8 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.apache.log4j.Logger;
 
+import com.quickrant.api.database.Database;
 import com.quickrant.api.models.CacheStats;
-import com.quickrant.api.services.CacheStatsService;
 import com.quickrant.api.utils.SimpleEntry;
 import com.quickrant.api.utils.TimeUtils;
 
@@ -118,43 +119,42 @@ public abstract class Cache {
 		if (timestamp == null) return false;
 		return (entries != null && !entries.isEmpty()) ? entries.containsKey(timestamp) : false;
 	}
+	
+	/**
+	 * Write some statistics to the database
+	 */
+	public void saveStats() {				
+		CacheStats cacheStats = new CacheStats();
+		cacheStats.setCacheName(name);
+		cacheStats.setEntries(entries.size());
+		cacheStats.setExpiry(expiry);
+		cacheStats.setNextRunTime(TimeUtils.getFutureTimestamp(2));
+		cacheStats.saveIt();
+		log.info("Saving stats - " + cacheStats.toString());
+	}
 
     /**
      * Clean the cache every N minutes
      */
-    private class CleanCacheTask extends TimerTask {
+    protected class CleanCacheTask extends TimerTask {
     	
     	private Logger log = Logger.getLogger(CleanCacheTask.class);    	
-
-    	private CacheStatsService statSvc = new CacheStatsService(); 
     	
     	@Override
     	public void run() {
-    		log.info("Cleaned up " + cleanCache() + " cached cookies (" + entries.size() + " active)");
-    		log.info("Next run time: " + getNextRunTime());
-    		persistCacheInfo();
+    		int cleaned = cleanCache();
+    		log.info("Cleaned up " +  cleaned + " cached cookies (" + entries.size() + " active)");
+    		log.info("Next run time: " + TimeUtils.getFutureTimestamp(2));
+    		try {
+				Database.open();
+				saveStats();
+			} catch (SQLException e) {
+				log.error("Unable to save stats for '" + name + "'", e);
+			} finally {
+				Database.close();
+			}    		
         }
     	
-    	/**
-    	 * Write some statistics to the database
-    	 */
-		protected void persistCacheInfo() {
-			CacheStats cacheStats = new CacheStats();
-			cacheStats.setCacheName(name);
-			cacheStats.setEntries(entries.size());
-			cacheStats.setExpiry(expiry);
-			cacheStats.setNextRunTime(getNextRunTime());
-			statSvc.save(cacheStats);
-		}
-    	
-		/**
-		 * Get next cleaning time
-		 * @return
-		 */
-    	protected Timestamp getNextRunTime() {
-			return TimeUtils.getFutureTimestamp(2);
-		}
-
     	/**
     	 * Clean the cache
     	 * @return
@@ -172,7 +172,7 @@ public abstract class Cache {
     		}
     		return cleaned;
     	}
-
+    	
     	/**
     	 * Check to see if the entry is older than maxEntryAgeInMin
     	 * @param Timestamp
@@ -182,5 +182,4 @@ public abstract class Cache {
     		return (TimeUtils.getNow() - ts.getTime()) > expiry * 60 * 1000;
     	}
     }
-
 }

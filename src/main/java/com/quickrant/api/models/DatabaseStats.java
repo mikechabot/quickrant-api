@@ -4,8 +4,6 @@ import java.sql.Timestamp;
 
 import org.javalite.activejdbc.Model;
 
-import com.quickrant.api.utils.TimeUtils;
-
 public class DatabaseStats extends Model {
 
 	public void setAvgPrepare(double avgPrepare) {
@@ -80,12 +78,12 @@ public class DatabaseStats extends Model {
 		return getLong("cache_hits");
 	}
 	
-	public void setCreated(Timestamp created) {
-		set("created_at", created);
+	public void setCreatedAt(Timestamp createdAt) {
+		set("created_at", createdAt);
 	}
 	
-	public String getCreated() {
-		return TimeUtils.getFormattedDate(getTimestamp("created_at"));
+	public Timestamp getCreatedAt() {
+		return getTimestamp("created_at");
 	}
 
 	public void setBonePartitions(int bonePartitions) {

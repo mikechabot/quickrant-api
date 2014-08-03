@@ -4,8 +4,6 @@ import java.sql.Timestamp;
 
 import org.javalite.activejdbc.Model;
 
-import com.quickrant.api.utils.TimeUtils;
-
 public class CacheStats extends Model { 
 	
 	public void setCacheName(String cacheName) {
@@ -36,16 +34,16 @@ public class CacheStats extends Model {
 		set("next_run_time", nextRunTime);
 	}
 	
-	public String getNextRunTime() {
-		return TimeUtils.getFormattedDateWithSec(getTimestamp("next_run_time"));
+	public Timestamp getNextRunTime() {
+		return getTimestamp("next_run_time");
 	}
 	
-	public void setCreated(Timestamp created) {
-		set("created_at", created);
+	public void setCreatedAt(Timestamp createdAt) {
+		set("created_at", createdAt);
 	}
 	
-	public String getCreated() {
-		return TimeUtils.getFormattedDate(getTimestamp("created_at"));
+	public Timestamp getCreatedAt() {
+		return getTimestamp("created_at");
 	}
 	
 }

@@ -55,6 +55,7 @@ public class Params {
 	}
 	
 	public String getCookieValue(String name) {
+		if (name == null || name.isEmpty()) return null;
 		if (getCookies() != null) {
 			for (Cookie temp : getCookies()) {
 				if(temp.getName().equals(name)) {
@@ -66,6 +67,7 @@ public class Params {
 	}
 	
 	public Cookie getCookie(String name) {
+		if (name == null || name.isEmpty()) return null;
 		for (Cookie cookie : getCookies()) {
 			if(cookie.getName().equals(name)) {
 				return cookie;
@@ -79,6 +81,7 @@ public class Params {
 	}
 
 	public String[] getStrings(String param) {
+		if (param == null || param.isEmpty()) return null;
 		List<String> temp = new ArrayList<String>(0);
 		String values = get(param);
 		if (values != null) {
