@@ -7,7 +7,7 @@ insert into questions values (nextval('questions_id_seq'), now(), now(), 'You kn
 
 insert into questions values (nextval('questions_id_seq'), now(), now(), 'You know what I hate?', 2);
 insert into questions values (nextval('questions_id_seq'), now(), now(), 'You know what''s bullshit?', 2);
-insert into questions values (nextval('questions_id_seq'), now(), now(), 'You know what''s cool?', 2);
+insert into questions values (nextval('questions_id_seq'), now(), now(), 'You know what sucks?', 2);
 insert into questions values (nextval('questions_id_seq'), now(), now(), 'You know what I don''t like?', 2);
 insert into questions values (nextval('questions_id_seq'), now(), now(), 'You know what I can''t stand?', 2);
 insert into questions values (nextval('questions_id_seq'), now(), now(), 'You know what makes me angry?', 2);

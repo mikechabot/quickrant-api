@@ -25,7 +25,7 @@ public abstract class Cache {
 	
 	public static String name;
 	
-	protected ConcurrentMap<Timestamp, String> entries = new ConcurrentHashMap<Timestamp, String>();
+	protected ConcurrentMap<Timestamp, String> entries = new ConcurrentHashMap<Timestamp, String>(0);
 	
 	/* In minutes */
 	protected long expiry;

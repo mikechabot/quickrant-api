@@ -1,1 +1,0 @@
-update questions set question = 'You know what pisses me off?' where id = 3;

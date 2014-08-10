@@ -11,5 +11,13 @@ public class Question extends Model {
 	public String getQuestion() {
 		return getString("question");
 	}
+	
+	public void setEmotionId(int emotionId) {
+		setString("emotion_id", emotionId);
+	}
+	
+	public String getEmotionId() {
+		return getString("emotion_id");
+	}
 
 }

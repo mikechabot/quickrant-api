@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import org.javalite.activejdbc.Model;
 
 public class Visitor extends Model {
-	
+
 	public void setCreatedAt(Timestamp createdAt) {
 		set("created_at", createdAt);
 	}	
