@@ -1,6 +1,7 @@
 package com.quickrant.api.models;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.javalite.activejdbc.Model;
 
@@ -65,5 +66,30 @@ public class Rant extends Model {
 	public String getCreated() {
 		return TimeUtils.getFormattedDate(getTimestamp("created_at"));
 	}
-
+	
+	public static List<Rant> getBySql(String sql) throws RantNotFoundException {
+		List<Rant> rants = Rant.findBySQL(sql);
+		if (rants != null && !rants.isEmpty()) {
+			return rants;
+		} else {
+			throw new RantNotFoundException("Rants not found: " + sql);
+		}
+	}
+	
+	public static Rant getById(Object id) throws RantNotFoundException {
+		Rant rant = Rant.findById(id);
+		if (rant != null) {
+			return rant;
+		} else {
+			throw new RantNotFoundException("Rant not found: " + id);
+		}
+	}
+	
+	public static class RantNotFoundException extends Exception {
+		private static final long serialVersionUID = 7236482818893873830L;
+		public RantNotFoundException() {}
+	      public RantNotFoundException(String message) {
+	         super(message);
+	      }
+	 }
 }
