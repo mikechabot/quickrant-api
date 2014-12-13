@@ -23,37 +23,41 @@ public abstract class Cache {
 	
 	private static Logger log = Logger.getLogger(Cache.class);
 	
-	public static String name;
-	
-	protected ConcurrentMap<Timestamp, String> entries = new ConcurrentHashMap<Timestamp, String>(0);
-	
+	public String id;
+
+	private ConcurrentMap<Timestamp, String> entries = new ConcurrentHashMap<Timestamp, String>(0);
+
 	/* In minutes */
 	protected long expiry;
 
 	private Timer timer;
 	private boolean initialized = false;
 
-	public void initializeCache(Configuration conf, String cacheName, boolean doCleanCache) {
+	public void initializeCache(Configuration conf, String id, boolean doCleanCache) {
 		if (initialized) return;
-		
-		/* Set cache name */
-		name = cacheName;
+
+		/* Set cache id */
+        this.id = id;
 
 		if (doCleanCache) {
 			timer = new Timer();
 	        timer.schedule(new CleanCacheTask(), 5000, 120000);
 		}
-		
+
 		/* Get configuration properties */
-		expiry = conf.getRequiredLong(name + "-expiry");
-		log.info("Cache '" + name + "' initialized -> expiry: " + expiry + " minute(s)");
-        
+		expiry = conf.getRequiredLong(id + "-expiry");
+		log.info("Cache '" + id + "' initialized -> expiry: " + expiry + " minute(s)");
+
 		initialized = true;
 	}
-	
+
 	public int size() {
 		return entries.size();
 	}
+
+    public String getId() {
+        return id;
+    }
 
 	public Entry<Timestamp, String> newEntry(String value) {
 		return new SimpleEntry<Timestamp, String>(TimeUtils.getNowTimestamp(), value);
@@ -64,12 +68,12 @@ public abstract class Cache {
 	}
 
 	public void put(Timestamp timestamp, String entry) {
-		entries.put(timestamp, entry);		
+		entries.put(timestamp, entry);
 	}
 
 	public void put(Entry<Timestamp, String> entry) {
 		entries.put(entry.getKey(), entry.getValue());
-		
+
 	}
 
 	public void updateByValue(String oldValue, String newValue) {
@@ -102,14 +106,14 @@ public abstract class Cache {
 		}
 		return null;
 	}
-	
+
 	public boolean contains(Entry<Timestamp, String> entry) {
 		if (entry == null) return false;
 		if (!containsValue(entry.getValue())) return false;
 		if (!containsTimestamp(entry.getKey())) return false;
 		return true;
-	}    
-	
+	}
+
 	public boolean containsValue(String value) {
 		if (value == null || value.length() == 0) return false;
 		return (entries != null && !entries.isEmpty()) ? entries.containsValue(value) : false;
@@ -119,13 +123,13 @@ public abstract class Cache {
 		if (timestamp == null) return false;
 		return (entries != null && !entries.isEmpty()) ? entries.containsKey(timestamp) : false;
 	}
-	
+
 	/**
 	 * Write some statistics to the database
 	 */
-	public void saveStats() {				
+	public void saveStats() {
 		CacheStats cacheStats = new CacheStats();
-		cacheStats.setCacheName(name);
+		cacheStats.setCacheName(id);
 		cacheStats.setEntries(entries.size());
 		cacheStats.setExpiry(expiry);
 		cacheStats.setNextRunTime(TimeUtils.getFutureTimestamp(2));
@@ -137,9 +141,9 @@ public abstract class Cache {
      * Clean the cache every N minutes
      */
     protected class CleanCacheTask extends TimerTask {
-    	
-    	private Logger log = Logger.getLogger(CleanCacheTask.class);    	
-    	
+
+    	private Logger log = Logger.getLogger(CleanCacheTask.class);
+
     	@Override
     	public void run() {
     		int cleaned = cleanCache();
@@ -149,7 +153,7 @@ public abstract class Cache {
 				Database.open();
 				saveStats();
 			} catch (SQLException e) {
-				log.error("Unable to save stats for '" + name + "'", e);
+				log.error("Unable to save stats for '" + id + "'", e);
 			} finally {
 				Database.close();
 			}    		
