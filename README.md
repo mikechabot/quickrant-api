@@ -1,3 +1,5 @@
+# PROJECT DEPRECATED (MOVED TO QUICKRANT-SERVER)
+
 quickrant-api
 =============
 
